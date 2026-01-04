@@ -1,37 +1,16 @@
-[Uploading index (3).html…]()
-<!DOCTYPE html>
 <html lang="en">
-<head><script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyBN7JWmQjaSwn4f6_DB4Ecejl271iPfYo8",
-    authDomain: "matraders3.firebaseapp.com",
-    projectId: "matraders3",
-    storageBucket: "matraders3.firebasestorage.app",
-    messagingSenderId: "441825754184",
-    appId: "1:441825754184:web:f31a8b6141bee79effec7d",
-    measurementId: "G-MVS8EYVVGS"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M.A Traders - Sahiwal | v18.8</title>
+    <title>M.A Traders - Sahiwal | v19.0 (Smart Customer Search)</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <style>
         :root { --primary: #1a3a5f; --secondary: #2980b9; --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; --bg: #ebf0f3; --white: #ffffff; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); margin: 0; padding-bottom: 50px; color: #333; }
         
-        /* Login Screen Styling */
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--primary); display: flex; justify-content: center;
@@ -40,7 +19,6 @@
         .login-box { background: white; padding: 30px; border-radius: 8px; text-align: center; color: #333; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .login-box input { padding: 10px; font-size: 1.2rem; width: 150px; text-align: center; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 4px; }
         
-        /* Original UI Components */
         .top-bar { background: var(--primary); color: white; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .container { max-width: 1400px; margin: 20px auto; padding: 0 20px; display: grid; grid-template-columns: 1.8fr 1fr; gap: 25px; }
         @media (max-width: 950px) { .container { grid-template-columns: 1fr; } }
@@ -61,6 +39,7 @@
         .btn-save { background: var(--primary); color: white; width: 100%; margin-top: 20px; }
         .btn-stock { background: var(--success); color: white; margin-top: 10px; width: 100%; }
         .btn-add-item { background: #e67e22; color: white; margin-top: 22px; width: 100%; }
+        
         .btn-view { background: var(--secondary); color: white; font-size: 0.65rem; padding: 4px 6px; border-radius: 3px; }
         .btn-del { background: var(--danger); color: white; font-size: 0.65rem; padding: 4px 6px; border-radius: 3px; }
         .btn-edit { background: var(--secondary); color: white; font-size: 0.65rem; padding: 4px 6px; border-radius: 3px; }
@@ -105,7 +84,8 @@
         <div class="top-bar">
             <div><strong style="font-size:1.5rem;">M.A TRADERS</strong> | Faisalabad Road Sahiwal</div>
             <div style="display: flex; gap: 10px; align-items: center;">
-                <button onclick="manualSave()" class="btn" style="background: var(--success); color: white; padding: 5px 10px;">SAVE ALL</button>
+                <span id="cloud-status" style="font-size:12px; color:#bdc3c7;">Connecting...</span>
+                <button onclick="manualSave()" class="btn" style="background: var(--success); color: white; padding: 5px 10px;">SYNC CLOUD</button>
                 <button onclick="logout()" class="btn" style="background: var(--danger); color: white; padding: 5px 10px;">LOGOUT</button>
                 <div id="clock"></div>
             </div>
@@ -129,10 +109,10 @@
                             <select onchange="document.getElementById('s-name').value = this.value">
                                 <option value="">-- Choose --</option>
                                 <option>Vicryl 1 40mm 90cm Demetech</option><option>Vicryl 1 40mm 90cm Ethicon</option><option>Vicryl 2/0 30mm 75cm Demetech</option><option>Vicryl 3/0 24mm 75cm Demetech</option><option>Vicryl 4/0 20mm 75cm Demetech</option><option>Vicryl 0 40mm 90cm Demetech </option>
-                                <option>Prolene 0 30mm 75cm Demetech </option><option>Prolene 1 30mm 75cm Demetech</option><option>Prolene 2/0 RB 30mm 75cm Demetech </option><option>Prolene 2/0 ST 60mm 75cm </option>
+                                <option>Prolene 0 30mm 75cm Demetech </option><option>Prolene 1 30mm 75cm Demetech</option><option>Prolene 2/0 RB 30mm 75cm Demetech </option><option>Prolene 2/0 ST 60mm 75cm Demetech </option>
                                 <option>Orange Syringe 5ml Auto Disable </option><option>BM Syringe 3ml Auto Disable</option><option>BM Syringe 5ml Auto Disable</option><option>BM Syringe 10ml Auto Disable</option>
                                 <option>Trow IV Infusion Set Single</option><option>Trow IV Infusion Set With Y Pot</option>
-                                <option>Trow Tape 1/2"</option><option>Trow Tape 1"</option><option>Trow Tape 2"</option><option>Orange IV Infusion Set Single</option>
+                                <option>Trow Tape 1/2"</option><option>Trow Tape 1"</option><option>Trow Tape 2"</option><option>Orange IV Infusion Set Single</option><option>Green IV Canula Inject Pot 18G </option><option>Green IV Canula Inject Pot 20G </option><option>Green IV Canula Inject Pot 22G </option><option>Green IV Canula Inject Pot 24G </option><option>Green IV Canula Introcan Type 18G </option><option>Green IV Canula Introcan Type 20G </option><option>Green IV Canula Introcan Type 22G </option><option>Green IV Canula Introcan Type 24G </option><option>Green IV Canula (With Stoper) 18G </option><option>Green IV Canula (With Stoper) 20G </option><option>Green IV Canula (With Stoper) 22G </option><option>Green IV Canula (With Stoper) 24G </option>
                             </select>
                         </div>
                         <div><label>Product Name</label><input type="text" id="s-name"></div>
@@ -155,8 +135,43 @@
                 <div class="card">
                     <div class="tab-header">Sale Entry</div>
                     <div class="grid-row">
-                        <div><label>Customer Name</label><input type="text" id="c-name" placeholder="Name"></div>
-                        <div><label>Address</label><input type="text" id="c-addr" placeholder="City"></div>
+                                 <div>
+                            <label>Quick Select City</label>
+                            <select onchange="document.getElementById('c-addr').value = this.value; filterCustomersByCity();">
+                                <option value="">-- Choose City --</option>
+                                <option value="Sahiwal">Sahiwal</option>
+                                <option value="Faisalabad">Faisalabad</option>
+                                <option value="Okara">Okara</option>
+                                <option value="Chichawatni">Chichawatni</option>
+                                <option value="Lahore">Lahore</option>
+                                <option value="Pakpattan">Pakpattan</option>
+                                 <option value="Arifwala">Arifwala</option>
+                                  <option value="Bahawalnagar">Bahawalnagar</option>
+                                   <option value="Haroonabad">Haroonabad</option>
+                                    <option value="Donga Bonga">Donga Bonga</option>
+                                     <option value="Chishtian">Chishtian</option>
+                                      <option value="Depalpur">Depalpur</option>
+                                       <option value="Basirpur">Basirpur</option>
+                                        <option value="Haveli Lakha">Haveli Lakha</option>
+                                         <option value="Renala Khurd">Renala Khurd</option>
+                                          <option value="Pattoki">Pattoki</option>
+                                           <option value="Kamalia">Kamalia</option>
+                                            <option value="Rajana">Rajana</option>
+                                             <option value="Pirmehal">Pirmehal</option>
+                                              <option value="Toba Tek Sing">Toba Tek Sing</option>
+                                               <option value="Gojra">Gojra</option>
+                                                 <option value="Jhang">Jhang</option>
+                                                  <option value="Iqbal Nagar">Iqbal Nagar</option>
+                            </select>
+                          
+                            <label>Address (City)</label>
+                            <input type="text" id="c-addr" placeholder="Type City (e.g Sahiwal)" oninput="filterCustomersByCity()">
+                        </div>
+                        <div>
+                            <label>Customer Name</label>
+                            <input type="text" id="c-name" list="customer-list" placeholder="Select or Type Name">
+                            <datalist id="customer-list"></datalist>
+                        </div>
                         <div><label>Amount Received</label><input type="number" id="c-received" value="0"></div>
                     </div>
                     <div class="grid-row" style="margin-top:15px; border-top:1px solid #eee; padding-top:10px;">
@@ -257,8 +272,8 @@
                 <div style="position: absolute; bottom: 15mm; left: 0; right: 0; text-align: center; font-size: 14px; border-top: 1.5px solid #000; padding-top: 10px; margin: 0 20mm; font-weight:bold; color:#000;">Thanks For Trust!</div>
             </div>
             <div class="no-print" style="text-align: center; margin-top: 30px;">
-                <button class="btn" style="background: #555; color: #fff; padding: 60px 60px;" onclick="document.getElementById('invoiceOverlay').style.display='none'">Close</button>
-                <button class="btn btn-save" style="width: auto; padding: 60px 60px; margin-center: 10px; background:var(--success);" onclick="window.print()">PRINT</button>
+                <button class="btn" style="background: #555; color: #fff; padding: 20px 40px;" onclick="document.getElementById('invoiceOverlay').style.display='none'">Close</button>
+                <button class="btn btn-save" style="width: auto; padding: 20px 40px; background:var(--success);" onclick="window.print()">PRINT</button>
             </div>
         </div>
     </div>
@@ -283,10 +298,23 @@
     </div>
 
 <script>
-    // System Variables
+    // --- 1. FIREBASE SETUP (Isy mat cheirain) ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyBN7JWmQjaSwn4f6_DB4Ecejl271iPfYo8",
+        authDomain: "matraders3.firebaseapp.com",
+        projectId: "matraders3",
+        storageBucket: "matraders3.firebasestorage.app",
+        messagingSenderId: "441825754184",
+        appId: "1:441825754184:web:f31a8b6141bee79effec7d"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // --- 2. SYSTEM VARIABLES ---
     let currentPass = "";
     let stock = [], sales = [], vendorCredit = {}, customerCredit = {}, paymentHistory = [], cart = [];
 
+    // --- 3. AUTH & LOADING DATA ---
     function checkAuth() {
         let savedPass = sessionStorage.getItem('ma_pass');
         if (savedPass) {
@@ -299,7 +327,7 @@
 
     function login() {
         const code = document.getElementById('login-code').value;
-        if (code === '1234' || code === '1122' || code === '1133') {
+        if (['1234', '1122', '1133'].includes(code)) {
             currentPass = code;
             sessionStorage.setItem('ma_pass', code);
             document.getElementById('login-screen').style.display = 'none';
@@ -307,54 +335,64 @@
             loadData();
         } else {
             alert("Incorrect Code!");
-            document.getElementById('login-code').value = "";
         }
     }
 
     function logout() {
-        if(confirm("Are you sure you want to logout?")) {
-            sessionStorage.removeItem('ma_pass');
-            location.reload();
+        sessionStorage.removeItem('ma_pass');
+        location.reload();
+    }
+
+    // --- 4. CLOUD SYNC FUNCTIONS ---
+    async function loadData() {
+        const status = document.getElementById('cloud-status');
+        status.innerText = "Loading from Cloud...";
+        status.style.color = "orange";
+
+        try {
+            const doc = await db.collection("traders_data").doc("shared_store").get();
+            if (doc.exists) {
+                let data = doc.data();
+                stock = data.stock || [];
+                sales = data.sales || [];
+                vendorCredit = data.vc || {};
+                customerCredit = data.cc || {};
+                paymentHistory = data.pay || [];
+            }
+            status.innerText = "Synced (Online)";
+            status.style.color = "#2ecc71";
+            render();
+        } catch (e) {
+            console.error(e);
+            alert("Internet Error! Check Connection.");
+            status.innerText = "Offline Error";
+            status.style.color = "red";
         }
     }
 
-    function loadData() {
-        let key = "ma_data_" + currentPass;
-        let data = JSON.parse(localStorage.getItem(key)) || {};
-        stock = data.stock || [];
-        sales = data.sales || [];
-        vendorCredit = data.vc || {};
-        customerCredit = data.cc || {};
-        paymentHistory = data.pay || [];
-        render();
-    }
-
-    function manualSave() {
-        let key = "ma_data_" + currentPass;
+    async function manualSave() {
+        const status = document.getElementById('cloud-status');
+        status.innerText = "Saving...";
+        
         let dataToSave = { stock, sales, vc: vendorCredit, cc: customerCredit, pay: paymentHistory };
-        localStorage.setItem(key, JSON.stringify(dataToSave));
-        alert("All Items Saved Successfully! (OK)");
+        
+        try {
+            await db.collection("traders_data").doc("shared_store").set(dataToSave);
+            status.innerText = "Synced (Online)";
+            alert("Data Saved to Cloud Successfully!");
+        } catch (e) {
+            alert("Error saving: " + e.message);
+        }
     }
 
     function saveAndRender() {
-        let key = "ma_data_" + currentPass;
-        let dataToSave = { stock, sales, vc: vendorCredit, cc: customerCredit, pay: paymentHistory };
-        localStorage.setItem(key, JSON.stringify(dataToSave));
         render();
     }
 
-    window.history.pushState(null, null, window.location.href);
-    window.onpopstate = function() {
-        if (confirm("Do you want to Save data? (Press OK to Save)")) {
-            manualSave();
-        }
-        window.history.pushState(null, null, window.location.href);
-    };
-
+    // --- 5. BUSINESS LOGIC ---
+    
     function confirmDelete(callback) {
-        if(confirm("Are you sure you want to delete this permanently?")) {
-            callback();
-        }
+        if(confirm("Are you sure you want to delete this permanently?")) { callback(); }
     }
 
     function addStock() {
@@ -378,7 +416,7 @@
                 if(due > 0) vendorCredit[vendor] = (vendorCredit[vendor] || 0) + due;
                 if(paid > 0) paymentHistory.push({ id: Date.now(), type: 'vend', name: vendor, amount: paid, date: new Date().toLocaleDateString(), time: new Date().toLocaleTimeString() });
             }
-            saveAndRender(); clearStockForm();
+            saveAndRender(); manualSave(); clearStockForm();
         }
     }
 
@@ -402,7 +440,7 @@
         const q = parseInt(prompt(`Quantity to return to vendor for ${item.name}? (Max: ${item.qty})`));
         if(q > 0 && q <= item.qty) {
             item.qty -= q;
-            saveAndRender();
+            saveAndRender(); manualSave();
             alert("Stock returned to vendor.");
         }
     }
@@ -437,15 +475,44 @@
         if(due > 0) customerCredit[client] = (customerCredit[client] || 0) + due;
         if(received > 0) paymentHistory.push({ id: Date.now(), type: 'cust', name: client, amount: received, date: new Date().toLocaleDateString(), time: new Date().toLocaleTimeString() });
         sales.push(saleObj);
-        saveAndRender(); showInvoice(saleObj);
+        saveAndRender(); manualSave(); showInvoice(saleObj);
         cart = []; renderCart();
     }
 
     function deleteBill(id) {
         confirmDelete(() => {
             sales = sales.filter(s => s.id !== id);
-            saveAndRender();
+            saveAndRender(); manualSave();
         });
+    }
+
+    // NEW FUNCTION: RETURN BILL
+    function returnBill(id) {
+        const saleIdx = sales.findIndex(s => s.id === id);
+        if (saleIdx === -1) return;
+        const sale = sales[saleIdx];
+
+        if(confirm(`Return Bill #${sale.id.toString().slice(-6)}? Stock will be restored and credit removed.`)) {
+            // 1. Restore Stock
+            sale.items.forEach(saleItem => {
+                const stockItem = stock.find(s => s.id === saleItem.itemId);
+                if(stockItem) {
+                    stockItem.qty += saleItem.qty;
+                }
+            });
+
+            // 2. Adjust Credit (if any was left unpaid)
+            if (sale.due > 0 && customerCredit[sale.client]) {
+                customerCredit[sale.client] -= sale.due;
+                if(customerCredit[sale.client] <= 0) delete customerCredit[sale.client];
+            }
+
+            // 3. Remove Sale Record
+            sales.splice(saleIdx, 1);
+
+            saveAndRender(); manualSave();
+            alert("Bill Returned and Stock Restored.");
+        }
     }
 
     function viewBill(id) {
@@ -472,7 +539,16 @@
             if(type==='cust') { customerCredit[name] -= amount; if(customerCredit[name]<=0) delete customerCredit[name]; } 
             else { vendorCredit[name] -= amount; if(vendorCredit[name]<=0) delete vendorCredit[name]; }
             paymentHistory.push({ id: Date.now(), type, name, amount, date: new Date().toLocaleDateString(), time: new Date().toLocaleTimeString() });
-            saveAndRender();
+            saveAndRender(); manualSave();
+        }
+    }
+
+    // NEW FUNCTION: DELETE LEDGER
+    function deleteLedger(type, name) {
+        if(confirm("Are you sure you want to delete this ledger record? Debt will be removed.")) {
+            if(type === 'cust') delete customerCredit[name];
+            else delete vendorCredit[name];
+            saveAndRender(); manualSave();
         }
     }
 
@@ -495,90 +571,50 @@
             allRecs.push({ ts: ts, date: p.date, time: p.time, paid: p.amount, credit: 0 });
         });
         allRecs.sort((a,b) => b.ts - a.ts);
-        const rows = allRecs.map(r => {
-            const dObj = new Date(r.ts);
-            const day = dObj.toLocaleDateString('en-US', { weekday: 'long' });
-            return `<tr><td>${r.date}<br><small>${day}</small></td><td>${r.time}</td><td style="color:green;">${r.paid > 0 ? r.paid.toLocaleString() : '-'}</td><td style="color:red;">${r.credit > 0 ? r.credit.toLocaleString() : '-'}</td></tr>`;
-        }).join('');
+        const rows = allRecs.map(r => `<tr><td>${r.date}</td><td>${r.time}</td><td style="color:green;">${r.paid > 0 ? r.paid.toLocaleString() : '-'}</td><td style="color:red;">${r.credit > 0 ? r.credit.toLocaleString() : '-'}</td></tr>`).join('');
         document.getElementById('hist-content').innerHTML = rows || '<tr><td colspan="4">No records found</td></tr>';
         document.getElementById('historyOverlay').style.display = 'block';
     }
 
-    // Function to Return Bill Stock
-    function returnBillStock(saleId) {
-        const sale = sales.find(s => s.id === saleId);
-        if(!sale) return;
-        if(confirm(`Return all items from bill of ${sale.client} to stock?`)) {
-            sale.items.forEach(soldItem => {
-                const stockItem = stock.find(si => si.id === soldItem.itemId);
-                if(stockItem) {
-                    stockItem.qty += soldItem.qty;
-                }
-            });
-            // Adjust Credit if balance was pending
-            if(sale.due > 0) {
-                customerCredit[sale.client] -= sale.due;
-                if(customerCredit[sale.client] <= 0) delete customerCredit[sale.client];
-            }
-            sales = sales.filter(s => s.id !== saleId);
-            alert("Items returned to stock and bill removed.");
-            saveAndRender();
-        }
-    }
-
-    // Function to Delete Ledger Entry
-    function deleteLedger(type, name) {
-        if(confirm(`Are you sure you want to delete ledger for ${name}?`)) {
-            if(type === 'cust') delete customerCredit[name];
-            else delete vendorCredit[name];
-            saveAndRender();
-        }
-    }
-
     function render() {
-        let ts = 0, sc = 0, tp = 0, stkH = "", hH = "", ccH = "", vcH = "";
+        document.getElementById('stk-body').innerHTML = stock.map(item => `
+            <tr>
+                <td><b>${item.name}</b><br><small>${item.pack || '-'} | Batch: ${item.batch || '-'}</small></td>
+                <td>${item.qty}</td>
+                <td>
+                    <button class="btn-edit" onclick="editStock(${item.id})">Edit</button>
+                    <button class="btn-del" onclick="confirmDelete(() => { stock = stock.filter(x => x.id !== ${item.id}); saveAndRender(); manualSave(); })">Del</button>
+                    <button class="btn-ret" onclick="returnToVendor(${item.id})">Ret</button>
+                </td>
+            </tr>
+        `).join('');
+
+        const prodSelect = document.getElementById('c-prod');
+        const currentVal = prodSelect.value;
+        prodSelect.innerHTML = '<option value="">-- Select --</option>' + 
+            stock.map(i => `<option value="${i.id}">${i.name} (${i.qty}) - Exp: ${i.exp}</option>`).join('');
+        prodSelect.value = currentVal;
+
+        let totalStockVal = stock.reduce((a, b) => a + (b.qty * b.buy), 0);
+        let totalSalesVal = sales.reduce((a, b) => a + b.total, 0);
+        let netProfit = sales.reduce((a, b) => a + b.items.reduce((x, y) => x + ((y.price - y.buy) * y.qty), 0), 0);
         
-        // Render Stock
-        stock.forEach(s => { 
-            if(s.qty > 0) {
-                sc += (s.qty * s.buy); 
-                stkH += `<tr><td>${s.name}</td><td>${s.qty}</td><td><button class="btn-edit" onclick="editStock(${s.id})">E</button><button class="btn-ret" onclick="returnToVendor(${s.id})">R</button><button class="btn-del" onclick="confirmDelete(() => { stock=stock.filter(x=>x.id!=${s.id});saveAndRender(); })">X</button></td></tr>`;
-            }
-        });
-
-        // Render Recent Bills (Sales)
-        sales.slice().reverse().forEach(s => {
-            ts += s.total; 
-            s.items.forEach(i => { tp += (i.total - (i.qty * i.buy)); });
-            hH += `<tr><td>${s.client}</td><td>${Math.round(s.total)}</td><td><button class="btn-view" onclick="viewBill(${s.id})">View</button><button class="btn-ret" onclick="returnBillStock(${s.id})">Return</button><button class="btn-del" onclick="deleteBill(${s.id})">X</button></td></tr>`;
-        });
-
-        // Render Ledgers
-        Object.entries(customerCredit).forEach(([n, v]) => {
-            ccH += `<tr><td>${n}</td><td style="color:red; font-weight:bold;">${Math.round(v).toLocaleString()}</td><td><button class="btn-pay" onclick="payCredit('cust','${n}')">Pay</button><button class="btn-hist" onclick="showHistory('cust','${n}')">H</button><button class="btn-del" onclick="deleteLedger('cust','${n}')">X</button></td></tr>`;
-        });
-        Object.entries(vendorCredit).forEach(([n, v]) => {
-            vcH += `<tr><td>${n}</td><td style="color:red; font-weight:bold;">${Math.round(v).toLocaleString()}</td><td><button class="btn-pay" onclick="payCredit('vend','${n}')">Pay</button><button class="btn-hist" onclick="showHistory('vend','${n}')">H</button><button class="btn-del" onclick="deleteLedger('vend','${n}')">X</button></td></tr>`;
-        });
-
-        document.getElementById('stk-body').innerHTML = stkH;
-        document.getElementById('h-body').innerHTML = hH;
-        document.getElementById('cc-body').innerHTML = ccH;
-        document.getElementById('vc-body').innerHTML = vcH;
+        document.getElementById('d-stock').innerText = Math.round(totalStockVal).toLocaleString();
+        document.getElementById('d-sales').innerText = Math.round(totalSalesVal).toLocaleString();
+        document.getElementById('d-profit').innerText = Math.round(netProfit).toLocaleString();
         
-        document.getElementById('d-stock').innerText = Math.round(sc).toLocaleString();
-        document.getElementById('d-sales').innerText = Math.round(ts).toLocaleString();
-        document.getElementById('d-profit').innerText = Math.round(tp).toLocaleString();
-        document.getElementById('d-cc').innerText = Math.round(Object.values(customerCredit).reduce((a,b)=>a+b,0)).toLocaleString();
-        document.getElementById('d-vc').innerText = Math.round(Object.values(vendorCredit).reduce((a,b)=>a+b,0)).toLocaleString();
+        let totalCC = Object.values(customerCredit).reduce((a,b)=>a+b,0);
+        let totalVC = Object.values(vendorCredit).reduce((a,b)=>a+b,0);
+        document.getElementById('d-cc').innerText = Math.round(totalCC).toLocaleString();
+        document.getElementById('d-vc').innerText = Math.round(totalVC).toLocaleString();
 
-        const sel = document.getElementById('c-prod');
-        const cur = sel.value;
-        sel.innerHTML = '<option value="">-- Select Product --</option>' + stock.filter(s => s.qty > 0).map(s => `<option value="${s.id}">${s.name} (Qty: ${s.qty})</option>`).join('');
-        sel.value = cur;
+        // UPDATED LEDGER SECTION WITH DELETE BUTTONS
+        document.getElementById('cc-body').innerHTML = Object.keys(customerCredit).map(c => `<tr><td>${c}</td><td>${Math.round(customerCredit[c])}</td><td><button class="btn-pay" onclick="payCredit('cust','${c}')">Pay</button> <button class="btn-hist" onclick="showHistory('cust','${c}')">Hist</button> <button class="btn-del" onclick="deleteLedger('cust','${c}')">X</button></td></tr>`).join('');
+        document.getElementById('vc-body').innerHTML = Object.keys(vendorCredit).map(v => `<tr><td>${v}</td><td>${Math.round(vendorCredit[v])}</td><td><button class="btn-pay" onclick="payCredit('vend','${v}')">Pay</button> <button class="btn-hist" onclick="showHistory('vend','${v}')">Hist</button> <button class="btn-del" onclick="deleteLedger('vend','${v}')">X</button></td></tr>`).join('');
+        
+        // UPDATED RECENT BILLS WITH RETURN BUTTON
+        document.getElementById('h-body').innerHTML = sales.slice(-10).reverse().map(s => `<tr><td>${s.client}<br><small>${s.date}</small></td><td>${Math.round(s.total)}</td><td><button class="btn-view" onclick="viewBill(${s.id})">View</button> <button class="btn-ret" onclick="returnBill(${s.id})">Ret</button> <button class="btn-del" onclick="deleteBill(${s.id})">X</button></td></tr>`).join('');
     }
-
-    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleString(); }, 1000);
 </script>
 </body>
 </html>
